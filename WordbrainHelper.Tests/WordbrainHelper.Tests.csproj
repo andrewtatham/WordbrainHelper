@@ -44,7 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplySplitTestCase.cs" />
-    <Compile Include="GridTests.cs" />
+    <Compile Include="DictionaryHelperTests.cs" />
+    <Compile Include="GridNavigatorTests.cs" />
     <Compile Include="PermutationHelperTests.cs" />
     <Compile Include="PermutationTestCase.cs" />
     <Compile Include="SolveTestCase.cs" />

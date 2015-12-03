@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -11,9 +12,9 @@ namespace WordbrainHelper.Tests
         {
             new SolveTestCase("TS,LA", new[] {4}, new[] {"SALT"}),
             new SolveTestCase("CN,HI", new[] {4}, new[] {"CHIN"}),
-            new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"})
-            //new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new int[]{5, 6, 5}, null),
-            //new SolveTestCase("PIRC,KATH,NIID,NOSW", new int[]{6, 5, 5}, null)
+            new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"}),
+            new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new int[]{5, 6, 5}, null),
+            new SolveTestCase("PIRC,KATH,NIID,NOSW", new int[]{6, 5, 5}, null)
         };
 
         [TestCase]
@@ -42,17 +43,29 @@ namespace WordbrainHelper.Tests
             Assert.IsNotEmpty(actual.Candidates);
             if (solveTestCase.Expected != null)
             {
-                Assert.IsTrue(
-                    actual.Candidates.Any(candidate =>
-                        solveTestCase.Expected.OrderBy(x => x).SequenceEqual(candidate.OrderBy(x => x))));
+                // Any subset candidate
+                Assert.IsTrue(actual.Candidates.Any(candidate => SubsetMatch(solveTestCase, candidate)));
+
+                // Any exact candidate
+                //Assert.IsTrue(actual.Candidates.Any(candidate => ExactMatch(solveTestCase, candidate)));
+
             }
             else
             {
                 foreach (var candidate in actual.Candidates)
                 {
-                    Console.WriteLine(candidate);
+                    Console.WriteLine(string.Format("{{ {0} }}", candidate.Aggregate((c1,c2) => c1 + ", "+ c2)));
                 }
             }
+        }
+
+        private static bool ExactMatch(SolveTestCase solveTestCase, string[] candidate)
+        {
+            return solveTestCase.Expected.OrderBy(x => x).SequenceEqual(candidate.OrderBy(x => x));
+        }
+        private static bool SubsetMatch(SolveTestCase solveTestCase, string[] candidate)
+        {
+            return new HashSet<string>(solveTestCase.Expected).IsSubsetOf(new HashSet<string>(candidate));
         }
     }
 }

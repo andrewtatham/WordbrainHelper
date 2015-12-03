@@ -41,7 +41,8 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="DictionaryHelper.cs" />
-    <Compile Include="Grid.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="GridNavigator.cs" />
     <Compile Include="PermutationHelper.cs" />
     <Compile Include="WordbrainHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

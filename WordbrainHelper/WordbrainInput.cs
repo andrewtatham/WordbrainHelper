@@ -2,14 +2,14 @@
 {
     public class WordbrainInput
     {
-        public WordbrainInput(string input, int[] words)
+        public WordbrainInput(string input, int[] wordLengths)
         {
             Input = input;
 
-            Words = words;
+            WordLengths = wordLengths;
         }
 
         public string Input { get; private set; }
-        public int[] Words { get; private set; }
+        public int[] WordLengths { get; private set; }
     }
 }

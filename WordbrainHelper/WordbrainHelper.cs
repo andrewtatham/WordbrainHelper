@@ -7,17 +7,33 @@ namespace WordbrainHelper
     {
         public static WordbrainOutput Solve(WordbrainInput input)
         {
-            var grid = new Grid(input.Input);
 
-            var permutations = grid.GeneratePermutations().ToList();
+            string lettersOnly = input.Input.Replace(",", string.Empty);
 
-            var splitPermutations = permutations
-                .Select(permutation => ApplySplit(permutation, input.Words).ToArray())
-                .ToList();
+            var grid = new GridNavigator(input.Input);
 
-            var candidates = splitPermutations.Where(words => words.Any(DictionaryHelper.IsAWord)).ToArray();
 
-            return new WordbrainOutput(candidates.ToArray());
+
+            var possibleWords = input.WordLengths.Distinct()
+                .SelectMany(
+                    wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, lettersOnly))
+                    .ToList();
+
+
+            var candidates = possibleWords
+                .Where(word => grid.CanIFind(word))
+                .ToArray();
+
+
+            //var permutations = grid.GeneratePermutations().ToList();
+
+            //var splitPermutations = permutations
+            //    .Select(permutation => ApplySplit(permutation, input.WordLengths).ToArray())
+            //    .ToList();
+
+            //var candidates = splitPermutations.Where(words => words.Any(DictionaryHelper.IsAWord)).ToArray();
+
+            return new WordbrainOutput(new []{candidates});
         }
 
         public static IEnumerable<string> ApplySplit(string permutation, int[] wordLengths)
