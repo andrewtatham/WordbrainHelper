@@ -1,91 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WordbrainHelper
 {
     public class GridNavigator
     {
-        private int _n;
+        private readonly List<Cell> _cells;
+        private readonly Dictionary<char, Cell[]> _cellsByLetter;
         private readonly Cell[,] _cellsXY;
-        private readonly Dictionary<Char,Cell[]> _cellsByLetter;
+        private readonly int _n;
 
         public GridNavigator(string grid)
         {
             var rows = grid.Split(',');
             _n = rows.Length;
 
-            var cells = new List<Cell>();
+            _cells = new List<Cell>();
 
             _cellsXY = new Cell[_n, _n];
             for (var y = 0; y < _n; y++)
             {
                 for (var x = 0; x < _n; x++)
                 {
-                    var cell = new Cell(grid[y * (_n + 1) + x], x, y);
-                    cells.Add(cell);
+                    var cell = new Cell(grid[y*(_n + 1) + x], x, y);
+                    _cells.Add(cell);
                     _cellsXY[x, y] = cell;
                 }
             }
 
-            _cellsByLetter = cells
+            _cellsByLetter = _cells
                 .GroupBy(cell => cell.Letter)
                 .ToDictionary(k => k.Key, v => v.ToArray());
-
         }
 
 
-        public bool CanIFind(string word, int n = 0, Cell startFrom = null)
+        public bool TryFindWord(string word, int n = 0, Cell startFrom = null)
         {
+            if (startFrom != null)
+            {
+                startFrom.Visited = true;
+            }
+
+
             if (startFrom == null)
             {
+                _cells.ForEach(cell => cell.Visited = false);
+
+
                 // first letter
-                if (_cellsByLetter.ContainsKey(word[0]))                    
-                    return _cellsByLetter[word[0]].Any(cell => CanIFind(word, n + 1, cell));
-                else return false;
+                if (_cellsByLetter.ContainsKey(word[0]))
+
+                    return _cellsByLetter[word[0]].Any(cell => TryFindWord(word, n + 1, cell));
+                return false;
             }
-            else if (n < word.Length)
+            if (n < word.Length)
             {
                 // Find next letter
+                var letter = word[n];
 
-                char letter = word[n];
-
-                
-
-                foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+                foreach (Direction direction in Enum.GetValues(typeof (Direction)))
                 {
-                    char? peekLetter = PeekCellLetter(startFrom, direction);
-     
+                    var peekLetter = PeekCellLetter(startFrom, direction);
 
                     if (peekLetter.HasValue && peekLetter.Value == letter)
                     {
                         var nextCell = GetNextCell(startFrom, direction);
-                        return CanIFind(word, n + 1, nextCell);
+                        return TryFindWord(word, n + 1, nextCell);
                     }
                 }
                 return false;
-
             }
-            else
-            {
-                // word found
-                return true;
-            }
-
-
-           
-                
+            // word found
+            return true;
         }
+
 
         public Cell GetNextCell(Cell startFrom, Direction direction)
         {
-            int x = startFrom.X;
-            int y = startFrom.Y;
-
+            var x = startFrom.X;
+            var y = startFrom.Y;
 
 
             switch (direction)
@@ -126,19 +120,15 @@ namespace WordbrainHelper
             {
                 return _cellsXY[x, y];
             }
-            else
-                return null;
+            return null;
         }
 
         public char? PeekCellLetter(Cell startFrom, Direction direction)
         {
             var nextCell = GetNextCell(startFrom, direction);
-            if (nextCell != null)
+            if (nextCell != null && !nextCell.Visited)
                 return nextCell.Letter;
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

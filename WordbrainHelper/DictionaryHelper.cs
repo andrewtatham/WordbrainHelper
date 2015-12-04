@@ -25,14 +25,13 @@ namespace WordbrainHelper
         {
             return Words.Contains(permutation);
         }
+
         public static string[] GetWordsByLengthContainingOnlyLetters(int length, string letters)
         {
             var chars = letters.ToCharArray();
             return WordsByLength[length]
                 .Where(word => new HashSet<char>(word).IsSubsetOf(chars))
                 .ToArray();
-           
-
         }
     }
 }

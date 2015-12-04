@@ -7,33 +7,23 @@ namespace WordbrainHelper
     {
         public static WordbrainOutput Solve(WordbrainInput input)
         {
-
-            string lettersOnly = input.Input.Replace(",", string.Empty);
+            var lettersOnly = input.Input.Replace(",", string.Empty);
 
             var grid = new GridNavigator(input.Input);
-
 
 
             var possibleWords = input.WordLengths.Distinct()
                 .SelectMany(
                     wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, lettersOnly))
-                    .ToList();
+                .ToList();
 
 
-            var candidates = possibleWords
-                .Where(word => grid.CanIFind(word))
+            var foundWords = possibleWords
+                .Where(word => grid.TryFindWord(word))
                 .ToArray();
 
 
-            //var permutations = grid.GeneratePermutations().ToList();
-
-            //var splitPermutations = permutations
-            //    .Select(permutation => ApplySplit(permutation, input.WordLengths).ToArray())
-            //    .ToList();
-
-            //var candidates = splitPermutations.Where(words => words.Any(DictionaryHelper.IsAWord)).ToArray();
-
-            return new WordbrainOutput(new []{candidates});
+            return new WordbrainOutput(new[] {foundWords});
         }
 
         public static IEnumerable<string> ApplySplit(string permutation, int[] wordLengths)
@@ -48,10 +38,9 @@ namespace WordbrainHelper
             {
                 word
             }.Union(ApplySplit(
-                new string(permutation.Skip(wordLengths[0]).ToArray()), 
+                new string(permutation.Skip(wordLengths[0]).ToArray()),
                 wordLengths.Skip(1).ToArray())
-            );
-
+                );
         }
     }
 }

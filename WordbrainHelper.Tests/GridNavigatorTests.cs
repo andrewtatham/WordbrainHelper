@@ -5,18 +5,15 @@ namespace WordbrainHelper.Tests
     [TestFixture]
     public class GridNavigatorTests
     {
-
         // ABC
         // DEF
         // GHI
-        readonly GridNavigator _grid = new GridNavigator("ABC,DEF,GHI");
-        
+        private readonly GridNavigator _grid = new GridNavigator("ABC,DEF,GHI");
 
 
         [Test]
         [TestCase("A", true)]
         [TestCase("Z", false)]
-
         [TestCase("AB", true)]
         [TestCase("BC", true)]
 
@@ -45,14 +42,12 @@ namespace WordbrainHelper.Tests
 
 
         // invalid
+        [TestCase("ABA", false)]
         [TestCase("ACI", false)]
         [TestCase("GBE", false)]
-
         public void CanIFind(string word, bool expected)
         {
-            Assert.AreEqual(expected, _grid.CanIFind(word), word);
+            Assert.AreEqual(expected, _grid.TryFindWord(word), word);
         }
-
-
     }
 }
