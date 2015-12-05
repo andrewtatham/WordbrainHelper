@@ -6,7 +6,7 @@ namespace WordbrainHelper.Tests
     [TestFixture]
     public class PermutationHelperTests
     {
-        public PermutationTestCase[] TestCases =
+        public static PermutationTestCase[] TestCases =
         {
             new PermutationTestCase("A", new[]
             {
@@ -37,7 +37,7 @@ namespace WordbrainHelper.Tests
         };
 
         [Test]
-        [TestCaseSource("TestCases")]
+        [TestCaseSource(nameof(TestCases))]
         public void GeneratePermutations(PermutationTestCase testCase)
         {
             var permutations = PermutationHelper.GeneratePermutations(testCase.Input).ToArray();

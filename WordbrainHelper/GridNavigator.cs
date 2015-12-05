@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 
 namespace WordbrainHelper
 {
@@ -10,6 +11,8 @@ namespace WordbrainHelper
         private readonly Dictionary<char, Cell[]> _cellsByLetter;
         private readonly Cell[,] _cellsXY;
         private readonly int _n;
+
+        private static readonly ILog Log = LogManager.GetLogger(nameof(GridNavigator));
 
         public GridNavigator(string grid)
         {
@@ -37,39 +40,52 @@ namespace WordbrainHelper
 
         public bool TryFindWord(string word, int n = 0, Cell startFrom = null)
         {
-            if (startFrom != null)
-            {
-                startFrom.Visited = true;
-            }
+            bool success = false;
 
 
             if (startFrom == null)
             {
                 _cells.ForEach(cell => cell.Visited = false);
 
-
                 // first letter
                 if (_cellsByLetter.ContainsKey(word[0]))
+                {
+                    foreach (var cell in _cellsByLetter[word[0]])
+                    {
+                        
+                        Log.DebugFormat("Trying to find {0} starting from cell {1}", word, cell);
+                        bool successTemp = TryFindWord(word, n + 1, cell);
+                        if (successTemp)
+                        {
+                            cell.Visited = true;
+                        }
+                        Log.DebugFormat("{0} finding {1} starting from cell {2}", successTemp ? "Success":"Fail", word, cell);
+                        success |= successTemp;
+                    }
+                    
+                }
 
-                    return _cellsByLetter[word[0]].Any(cell => TryFindWord(word, n + 1, cell));
-                return false;
+                return success;
             }
             if (n < word.Length)
             {
                 // Find next letter
                 var letter = word[n];
+                Log.DebugFormat("Trying to find {0} in {1}", letter, word);
 
                 foreach (Direction direction in Enum.GetValues(typeof (Direction)))
                 {
                     var peekLetter = PeekCellLetter(startFrom, direction);
-
                     if (peekLetter.HasValue && peekLetter.Value == letter)
                     {
-                        var nextCell = GetNextCell(startFrom, direction);
-                        return TryFindWord(word, n + 1, nextCell);
+                        startFrom.Visited = true;
+                        Log.DebugFormat("Found {0} by looking {1}", letter, direction);
+                        var nextCell = GetNextCell(startFrom, direction);                        
+                        var successTemp = TryFindWord(word, n + 1, nextCell);
+                        success |= successTemp;
                     }
                 }
-                return false;
+                return success;
             }
             // word found
             return true;

@@ -13,5 +13,10 @@
         public int X { get; private set; }
         public int Y { get; private set; }
         public bool Visited { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{X},{Y}:{Letter}]";
+        }
     }
 }

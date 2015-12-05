@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net.Config;
 using NUnit.Framework;
 
 namespace WordbrainHelper.Tests
@@ -8,16 +9,21 @@ namespace WordbrainHelper.Tests
     [TestFixture]
     public class WordbrainHelperTests
     {
+
+
+
+
         public static readonly SolveTestCase[] SolveTestCases =
         {
-            new SolveTestCase("TS,LA", new[] {4}, new[] {"SALT"}),
-            new SolveTestCase("CN,HI", new[] {4}, new[] {"CHIN"}),
-            new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"}),
-            new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new[] {5, 6, 5}, null),
-            new SolveTestCase("PIRC,KATH,NIID,NOSW", new[] {6, 5, 5}, null)
+            //new SolveTestCase("TS,LA", new[] {4}, new[] {"SALT"}),
+            //new SolveTestCase("CN,HI", new[] {4}, new[] {"CHIN"}),
+            //new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"}),
+            //new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new[] {5, 6, 5}, null),
+            //new SolveTestCase("PIRC,KATH,NIID,NOSW", new[] {6, 5, 5}, null),
+            new SolveTestCase("TENE,RLTO,ICRB,CYMO", new[] {8,8}, new [] {"TRICYCLE", "TROMBONE"})
         };
 
-        [TestCase]
+        [Test]
         [TestCaseSource("ApplySplitTestCases")]
         public void ApplySplit(ApplySplitTestCase applySplitTestCase)
         {
@@ -45,7 +51,7 @@ namespace WordbrainHelper.Tests
         }
 
         [Test]
-        [TestCaseSource("SolveTestCases")]
+        [TestCaseSource(nameof(SolveTestCases))]
         public void Solve(SolveTestCase solveTestCase)
         {
             Console.WriteLine("Grid:");
