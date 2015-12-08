@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WordbrainHelper.Grid;
 
 namespace WordbrainHelper
 {
@@ -7,23 +8,63 @@ namespace WordbrainHelper
     {
         public static WordbrainOutput Solve(WordbrainInput input)
         {
-            var lettersOnly = input.Input.Replace(",", string.Empty);
 
             var grid = new GridNavigator(input.Input);
 
+            var letters = grid.GetRemainingLetters();
 
             var possibleWords = input.WordLengths.Distinct()
                 .SelectMany(
-                    wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, lettersOnly))
+                    wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters))
+                    .OrderByDescending(word => word.Length)
                 .ToList();
 
 
             var foundWords = possibleWords
-                .Where(word => grid.TryFindWord(word))
+                .SelectMany(word => grid.TryFindWord(word))
+                .Where(word => word.Found)
                 .ToArray();
 
+            var candidateSolutions = new List<CandidateSolution>();
 
-            return new WordbrainOutput(new[] {foundWords});
+            foreach (var foundWord in foundWords)
+            {
+                var candidateSolution = new CandidateSolution();
+
+                var wordLenths2 = new List<int>(input.WordLengths);
+                wordLenths2.Remove(foundWord.Word.Length);
+
+
+                // TODO new grid
+                grid.RemoveCells(foundWord.Path);
+                var letters2 = grid.GetRemainingLetters();
+
+
+
+                var possibleWords2 = input.WordLengths.Distinct()
+                    .SelectMany(
+                        wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters2))
+                        .OrderByDescending(word => word.Length)
+                    .ToList();
+
+
+                var foundWords2 = possibleWords2
+                    .SelectMany(word => grid.TryFindWord(word))
+                    .Where(word => word.Found)
+                    .ToArray();
+
+                foreach (var foundWord2 in foundWords2)
+                {
+                    candidateSolution.Add(foundWord2);
+
+                }
+
+                candidateSolutions.Add(candidateSolution);
+
+            }
+
+
+            return new WordbrainOutput(candidateSolutions);
         }
 
         public static IEnumerable<string> ApplySplit(string permutation, int[] wordLengths)

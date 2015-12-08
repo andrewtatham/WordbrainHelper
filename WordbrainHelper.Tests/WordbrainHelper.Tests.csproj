@@ -50,7 +50,8 @@
     <Compile Include="AllTests.cs" />
     <Compile Include="ApplySplitTestCase.cs" />
     <Compile Include="DictionaryHelperTests.cs" />
-    <Compile Include="GridNavigatorTests.cs" />
+    <Compile Include="Grid\GridNavigatorTryFindWordTests.cs" />
+    <Compile Include="Grid\GridNavigatorTryFindLettersTests.cs" />
     <Compile Include="PermutationHelperTests.cs" />
     <Compile Include="PermutationTestCase.cs" />
     <Compile Include="SolveTestCase.cs" />
@@ -70,6 +71,9 @@
     <Content Include="wordsEn.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dictionary.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

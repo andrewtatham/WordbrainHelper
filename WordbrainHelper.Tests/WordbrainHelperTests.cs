@@ -15,12 +15,14 @@ namespace WordbrainHelper.Tests
 
         public static readonly SolveTestCase[] SolveTestCases =
         {
-            //new SolveTestCase("TS,LA", new[] {4}, new[] {"SALT"}),
-            //new SolveTestCase("CN,HI", new[] {4}, new[] {"CHIN"}),
-            //new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"}),
-            //new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new[] {5, 6, 5}, null),
-            //new SolveTestCase("PIRC,KATH,NIID,NOSW", new[] {6, 5, 5}, null),
-            new SolveTestCase("TENE,RLTO,ICRB,CYMO", new[] {8,8}, new [] {"TRICYCLE", "TROMBONE"})
+            new SolveTestCase("TS,LA", new[] {4}, new[] {"SALT"}),
+            new SolveTestCase("CN,HI", new[] {4}, new[] {"CHIN"}),
+            new SolveTestCase("LSE,LID,LOD", new[] {5, 4}, new[] {"SLIDE", "DOLL"}),
+            new SolveTestCase("ENRD,LOCO,HBAT,RTRE", new[] {5, 6, 5}, null),
+            new SolveTestCase("PIRC,KATH,NIID,NOSW", new[] {6, 5, 5}, null),
+            new SolveTestCase("TENE,RLTO,ICRB,CYMO", new[] {8,8}, new [] {"TRICYCLE", "TROMBONE"}),
+            new SolveTestCase("DYAE,RPSI,ACKT,CREN", new[] {4,7,5}, new [] {"CARD", "NECKTIE"}),
+
         };
 
         [Test]
@@ -70,17 +72,17 @@ namespace WordbrainHelper.Tests
             Console.WriteLine("Found:");
             foreach (var candidate in actual.Candidates)
             {
-                Console.WriteLine("{{ {0} }}", candidate.Aggregate((c1, c2) => c1 + ", " + c2));
+                Console.WriteLine("{{ {0} }}", candidate.Select(word => word.Word).Aggregate((c1, c2) => c1 + ", " + c2));
             }
 
 
             if (solveTestCase.Expected != null)
             {
                 // Any subset candidate
-                Assert.IsTrue(actual.Candidates.Any(candidate => SubsetMatch(solveTestCase, candidate)));
+                Assert.IsTrue(actual.Candidates.Any(candidate => SubsetMatch(solveTestCase, candidate.Select(word => word.Word).ToArray())));
 
                 // Any exact candidate
-                //Assert.IsTrue(actual.Candidates.Any(candidate => ExactMatch(solveTestCase, candidate)));
+                //Assert.IsTrue(actual.Candidates.Any(candidate => ExactMatch(solveTestCase, candidate.Select(word => word.Word).ToArray())));
             }
         }
     }

@@ -18,5 +18,16 @@
         {
             return $"[{X},{Y}:{Letter}]";
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Cell;
+            return Letter == other.Letter && X == other.X && Y == other.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return Letter.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode();
+        }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Resources;
 
 namespace WordbrainHelper
 {
@@ -11,7 +13,10 @@ namespace WordbrainHelper
 
         static DictionaryHelper()
         {
-            var words = File.ReadAllLines(@"wordsEn.txt")
+            
+
+
+            var words = DictionaryEn.wordsEn.Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(word => word.ToUpperInvariant())
                 .ToList();
             Words = new HashSet<string>(words);

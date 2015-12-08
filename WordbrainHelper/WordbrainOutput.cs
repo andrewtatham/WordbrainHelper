@@ -1,12 +1,14 @@
-﻿namespace WordbrainHelper
+﻿using System.Collections.Generic;
+
+namespace WordbrainHelper
 {
     public class WordbrainOutput
     {
-        public WordbrainOutput(string[][] candidates)
+        public WordbrainOutput(List<CandidateSolution> candidates)
         {
             Candidates = candidates;
         }
 
-        public string[][] Candidates { get; private set; }
+        public List<CandidateSolution> Candidates { get; private set; }
     }
 }

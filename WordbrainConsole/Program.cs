@@ -56,7 +56,7 @@ namespace WordbrainConsole
             {
                 if (candidate.Any())
                 {
-                    Console.WriteLine("{0}", candidate.Aggregate((r1, r2) => r1 + " " + r2));
+                    Console.WriteLine("{0}", candidate.Select(word => word.Word).Aggregate((r1, r2) => r1 + " " + r2));
                 }
 
             }

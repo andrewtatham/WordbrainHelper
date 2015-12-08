@@ -43,10 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cell.cs" />
+    <Compile Include="CandidateSolution.cs" />
+    <Compile Include="Grid\Cell.cs" />
+    <Compile Include="DictionaryEn.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DictionaryEn.resx</DependentUpon>
+    </Compile>
     <Compile Include="DictionaryHelper.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="GridNavigator.cs" />
+    <Compile Include="Grid\Direction.cs" />
+    <Compile Include="Grid\FoundWord.cs" />
+    <Compile Include="Grid\GridNavigator.cs" />
+    <Compile Include="Grid\Path.cs" />
+    <Compile Include="Grid\Paths.cs" />
     <Compile Include="PermutationHelper.cs" />
     <Compile Include="WordbrainHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +69,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DictionaryEn.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DictionaryEn.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

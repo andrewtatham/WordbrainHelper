@@ -10,5 +10,10 @@
 
         public WordbrainInput Input { get; private set; }
         public string[] Expected { get; private set; }
+
+        public override string ToString()
+        {
+            return Input.ToString();
+        }
     }
 }

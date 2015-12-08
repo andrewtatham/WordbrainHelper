@@ -1,9 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 
 namespace WordbrainHelper.Tests
 {
     [TestFixture]
-    public class GridNavigatorTests
+    public class GridNavigatorTryFindLettersTests
     {
         // ABC
         // DEF
@@ -45,9 +46,13 @@ namespace WordbrainHelper.Tests
         [TestCase("ABA", false)]
         [TestCase("ACI", false)]
         [TestCase("GBE", false)]
-        public void CanIFind(string word, bool expected)
+        public void TryFindLetters(string word, bool expected)
         {
-            Assert.AreEqual(expected, _grid.TryFindWord(word), word);
+            var actual = _grid.TryFindLetters(word);
+
+            Assert.AreEqual(expected, actual.SingleOrDefault() != null, word);
         }
+
+
     }
 }
