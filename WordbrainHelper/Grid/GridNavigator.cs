@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using log4net;
+using log4net.Core;
 using WordbrainHelper.Grid;
 
 namespace WordbrainHelper
@@ -16,6 +17,8 @@ namespace WordbrainHelper
         private readonly int _n;
 
         private static readonly ILog Log = LogManager.GetLogger(nameof(GridNavigator));
+
+
 
         public GridNavigator(string grid)
         {
@@ -191,7 +194,32 @@ namespace WordbrainHelper
                 _cells.Remove(foundWordCell);
                 _cellsXY[foundWordCell.X, foundWordCell.Y] = null;
                 _cellsByLetter[foundWordCell.Letter].Remove(foundWordCell);
+
+                
             }
+
+            // drop cells
+
+            for (int x = 0; x < _n; x++)
+            {
+                for (int y = _n-1; y > 0; y--)
+                {
+                    var cellabove = _cellsXY[x, y - 1];
+                    var cell = _cellsXY[x, y];
+                    if (cell == null && cellabove != null)
+                    {
+                        _cellsXY[x, y - 1] = null;
+                        cell = cellabove;
+                        cell.X = x;
+                        cell.Y = y;
+                        _cellsXY[x, y] = cell;
+                    }
+
+
+                }
+
+            }
+
 
         }
 

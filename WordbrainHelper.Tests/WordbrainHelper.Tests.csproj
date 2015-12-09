@@ -52,8 +52,6 @@
     <Compile Include="DictionaryHelperTests.cs" />
     <Compile Include="Grid\GridNavigatorTryFindWordTests.cs" />
     <Compile Include="Grid\GridNavigatorTryFindLettersTests.cs" />
-    <Compile Include="PermutationHelperTests.cs" />
-    <Compile Include="PermutationTestCase.cs" />
     <Compile Include="SolveTestCase.cs" />
     <Compile Include="WordbrainHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

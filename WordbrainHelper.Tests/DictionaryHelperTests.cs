@@ -13,13 +13,5 @@ namespace WordbrainHelper.Tests
                 DictionaryHelper.GetWordsByLengthContainingOnlyLetters(length, letters));
         }
 
-
-        [Test]
-        [TestCase("PYTHAGORAS", true)]
-        [TestCase("XYZ", false)]
-        public void IsAWord(string word, bool expected)
-        {
-            Assert.AreEqual(expected, DictionaryHelper.IsAWord(word));
-        }
     }
 }

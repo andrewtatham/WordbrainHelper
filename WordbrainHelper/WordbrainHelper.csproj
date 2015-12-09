@@ -56,16 +56,10 @@
     <Compile Include="Grid\GridNavigator.cs" />
     <Compile Include="Grid\Path.cs" />
     <Compile Include="Grid\Paths.cs" />
-    <Compile Include="PermutationHelper.cs" />
     <Compile Include="WordbrainHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WordbrainInput.cs" />
     <Compile Include="WordbrainOutput.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="wordsEn.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +69,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DictionaryEn.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wordsEn.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

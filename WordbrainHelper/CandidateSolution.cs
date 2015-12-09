@@ -9,6 +9,14 @@ namespace WordbrainHelper
 {
     public class CandidateSolution : List<FoundWord>
     {
+        public CandidateSolution()
+        {
+            
+        }
+        public CandidateSolution(IEnumerable<FoundWord> collection) : base(collection)
+        {
+        }
+
         public override bool Equals(object obj)
         {
             var other = obj as CandidateSolution;
