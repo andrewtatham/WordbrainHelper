@@ -1,87 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using WordbrainHelper.Grid;
 
 namespace WordbrainHelper
 {
     public static class WordbrainHelper
     {
+        private static readonly ILog Log = LogManager.GetLogger(nameof(WordbrainHelper));
+
+
         public static WordbrainOutput Solve(WordbrainInput input)
         {
-
-            var grid = new GridNavigator(input.Input);
-
-            var letters = grid.GetRemainingLetters();
-
-            var possibleWords = input.WordLengths.Distinct()
-                .SelectMany(
-                    wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters))
-                    .OrderByDescending(word => word.Length)
-                .ToList();
-
-
-            var foundWords = possibleWords
-                .SelectMany(word => grid.TryFindWord(word))
-                .Where(word => word.Found)
-                .ToArray();
-
-            var candidateSolutions = new List<CandidateSolution>();
-
-            foreach (var foundWord in foundWords)
-            {
-                var candidateSolution = new CandidateSolution();
-
-                var wordLenths2 = new List<int>(input.WordLengths);
-                wordLenths2.Remove(foundWord.Word.Length);
-
-
-                // TODO new grid
-                grid.RemoveCells(foundWord.Path);
-                var letters2 = grid.GetRemainingLetters();
-
-
-
-                var possibleWords2 = input.WordLengths.Distinct()
-                    .SelectMany(
-                        wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters2))
-                        .OrderByDescending(word => word.Length)
-                    .ToList();
-
-
-                var foundWords2 = possibleWords2
-                    .SelectMany(word => grid.TryFindWord(word))
-                    .Where(word => word.Found)
-                    .ToArray();
-
-                foreach (var foundWord2 in foundWords2)
-                {
-                    candidateSolution.Add(foundWord2);
-
-                }
-
-                candidateSolutions.Add(candidateSolution);
-
-            }
-
-
-            return new WordbrainOutput(candidateSolutions);
+            return new WordbrainOutput(TrySolve(input.Input, input.WordLengths));
         }
 
-        public static IEnumerable<string> ApplySplit(string permutation, int[] wordLengths)
+        private static List<CandidateSolution> TrySolve(string input, List<int> wordLengths, CandidateSolution cs = null)
         {
-            var word = new string(permutation.Take(wordLengths[0]).ToArray());
+            var candidateSolutions = new List<CandidateSolution>();
 
-            if (wordLengths.Length == 1)
+            var grid = new GridNavigator(input);
+            var letters = grid.GetRemainingLetters();
+            foreach (var wordLength in wordLengths.Distinct())
             {
-                return new[] {word};
+                var newWordLengths = new List<int>(wordLengths);
+                newWordLengths.Remove(wordLength);
+
+                var possibleWords = DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters)
+                    .SelectMany(word => grid.TryFindWord(word))
+                    .Where(word => word.Found);
+
+                foreach (var possibleWord in possibleWords)
+                {              
+                    if(cs == null) cs = new CandidateSolution();
+                    cs.Add(possibleWord);
+                    candidateSolutions.Add(cs);
+
+                    var newgrid = new GridNavigator(grid.GetGridState());
+                    newgrid.RemoveCells(possibleWord.Path);
+
+                    if (newWordLengths.Any())
+                    {
+                        var state = newgrid.GetGridState();
+                        Log.InfoFormat("Grid State: {0}", state);
+                        candidateSolutions.AddRange(TrySolve(state, newWordLengths, cs));
+                    }
+              
+                    
+                }
             }
-            return new[]
+            if (candidateSolutions.Any())
             {
-                word
-            }.Union(ApplySplit(
-                new string(permutation.Skip(wordLengths[0]).ToArray()),
-                wordLengths.Skip(1).ToArray())
-                );
+                Log.InfoFormat("returning {0}", candidateSolutions.Select(c => c.ToString()).Aggregate((cs1,cs2) => cs1 + Environment.NewLine + cs2));
+            }
+            return candidateSolutions;
         }
     }
 }
