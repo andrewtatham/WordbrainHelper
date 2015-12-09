@@ -48,7 +48,7 @@ namespace WordbrainConsole
 
             var grid = rows.Aggregate((r1, r2) => r1 + "," + r2);
 
-            var input = new WordbrainInput(grid, wordLengths.ToArray());
+            var input = new WordbrainInput(grid, wordLengths);
 
             var output = global::WordbrainHelper.WordbrainHelper.Solve(input);
 

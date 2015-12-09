@@ -1,8 +1,10 @@
-﻿namespace WordbrainHelper.Tests
+﻿using System.Collections.Generic;
+
+namespace WordbrainHelper.Tests
 {
     public class SolveTestCase
     {
-        public SolveTestCase(string input, int[] words, string[] expected)
+        public SolveTestCase(string input, List<int> words, string[] expected)
         {
             Input = new WordbrainInput(input, words);
             Expected = expected;

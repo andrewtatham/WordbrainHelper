@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using log4net;
 using WordbrainHelper.Grid;
@@ -192,6 +193,34 @@ namespace WordbrainHelper
                 _cellsByLetter[foundWordCell.Letter].Remove(foundWordCell);
             }
 
+        }
+
+        public string GetGridState()
+        {
+            var sb = new StringBuilder();
+            for (int y = 0; y < _n; y++)
+            {
+                if (y!=0)
+                {
+                    sb.Append(',');
+                }
+                for (int x = 0; x < _n; x++)
+                {
+                    var cell = _cellsXY[x, y];
+                    if (cell == null)
+                    {
+
+                        sb.Append(' ');
+                    }
+                    else
+                    {
+                        sb.Append(cell.Letter);
+                    }
+
+                }
+                 
+            }
+            return sb.ToString();
         }
     }
 }

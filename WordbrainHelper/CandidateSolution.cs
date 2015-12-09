@@ -20,5 +20,9 @@ namespace WordbrainHelper
         {
             return this.Select(foundWord => foundWord.GetHashCode()).Aggregate((h1, h2) => h1 ^ h2);
         }
+        public override string ToString()
+        {
+            return this.Select(foundWord => foundWord.ToString()).Aggregate((h1, h2) => h1 + " " + h2);
+        }
     }
 }
