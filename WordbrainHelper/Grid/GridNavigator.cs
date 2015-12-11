@@ -50,13 +50,13 @@ namespace WordbrainHelper
                 .ToDictionary(k => k.Key, v => v.ToList());
         }
 
-        public List<FoundWord> TryFindWord(string word)
+        public IEnumerable<FoundWord> TryFindWord(string word)
         {
             var paths = TryFindLetters(word);
 
             if (paths.Any())
             {
-                return paths.Select(path => new FoundWord(word, true, path)).ToList();
+                return paths.Select(path => new FoundWord(word, true, path));
             }
             else
             {
@@ -164,7 +164,7 @@ namespace WordbrainHelper
                     x = x + 1;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("direction", direction, null);
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
             if (0 <= x && x < _n && 0 <= y && y < _n)

@@ -23,13 +23,12 @@ namespace WordbrainHelper
             WordsByLength = words.GroupBy(k => k.WordLength).ToDictionary(k => k.Key, v => v.ToList());
         }
 
-        public static string[] GetWordsByLengthContainingOnlyLetters(int length, string letters)
+        public static IEnumerable<string> GetWordsByLengthContainingOnlyLetters(int length, string letters)
         {
             var chars = letters.ToCharArray();
             return WordsByLength[length]
                 .Where(word => word.Letters.IsSubsetOf(chars))
-                .Select(word => word.Word)
-                .ToArray();
+                .Select(word => word.Word);
         }
     }
 

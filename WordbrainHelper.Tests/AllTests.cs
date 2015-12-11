@@ -19,6 +19,9 @@ namespace WordbrainHelper.Tests
         public void OneTimeSetUp()
         {
             BasicConfigurator.Configure();
+            
+            
+
 
             //((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root.Level = Level.Info;
             //((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).RaiseConfigurationChanged(EventArgs.Empty);

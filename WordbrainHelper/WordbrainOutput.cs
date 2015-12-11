@@ -4,11 +4,11 @@ namespace WordbrainHelper
 {
     public class WordbrainOutput
     {
-        public WordbrainOutput(List<CandidateSolution> candidates)
+        public WordbrainOutput(IEnumerable<CandidateSolution> candidates)
         {
             Candidates = candidates;
         }
 
-        public List<CandidateSolution> Candidates { get; private set; }
+        public IEnumerable<CandidateSolution> Candidates { get; private set; }
     }
 }

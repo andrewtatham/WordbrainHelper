@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WordbrainHelper.Tests</RootNamespace>
     <AssemblyName>WordbrainHelper.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,18 +49,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllTests.cs" />
-    <Compile Include="ApplySplitTestCase.cs" />
     <Compile Include="DictionaryHelperTests.cs" />
     <Compile Include="Grid\GridNavigatorTryFindWordTests.cs" />
     <Compile Include="Grid\GridNavigatorTryFindLettersTests.cs" />
-    <Compile Include="SolveTestCase.cs" />
     <Compile Include="WordbrainHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WordbrainHelper.TestData\WordbrainHelper.TestData.csproj">
+      <Project>{2df78195-27c4-471a-8d30-79c1ef968bbc}</Project>
+      <Name>WordbrainHelper.TestData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WordbrainHelper\WordbrainHelper.csproj">
       <Project>{d9a42588-6300-48b1-b4c8-c65e2d53b6ed}</Project>
       <Name>WordbrainHelper</Name>
@@ -72,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dictionary.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

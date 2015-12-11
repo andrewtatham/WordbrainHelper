@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using log4net;
 using WordbrainHelper.Grid;
 
@@ -14,55 +15,60 @@ namespace WordbrainHelper
 
         public static WordbrainOutput Solve(WordbrainInput input)
         {
-            return new WordbrainOutput(TrySolve(input.Input, input.WordLengths));
+            var cs = new CandidateSolution(input);
+
+
+            var output = new WordbrainOutput(TrySolve(cs));
+
+            Log.InfoFormat("returning {0}", output.Candidates.Select(c => c.ToString()).Aggregate((cs1, cs2) => cs1 + Environment.NewLine + cs2));
+
+
+            return output;
         }
 
-        private static List<CandidateSolution> TrySolve(string input, List<int> wordLengths, CandidateSolution cs = null)
+        private static IEnumerable<CandidateSolution> TrySolve(CandidateSolution cs)
         {
-            var candidateSolutions = new List<CandidateSolution>();
 
-            var grid = new GridNavigator(input);
+            var grid = new GridNavigator(cs.GridState);
+            Log.DebugFormat("Grid: {0} ", cs.GridState);
+
             var letters = grid.GetRemainingLetters();
+            Log.DebugFormat("letters: {0} ", letters);
 
-            var possibleWords = wordLengths.Distinct().OrderByDescending(wordLength => wordLength)
+            var possibleWords = cs.WordLengths.Distinct().OrderByDescending(wordLength => wordLength)
                 .SelectMany(wordLength => DictionaryHelper.GetWordsByLengthContainingOnlyLetters(wordLength, letters))
                 .SelectMany(word => grid.TryFindWord(word))
                 .Where(word => word.Found)
                 .ToList();
 
- 
+            var candidateSolutions = new List<CandidateSolution>();
+
+            foreach (var possibleWord in possibleWords)
+                Log.InfoFormat("Current: {0} Found: {1}", cs, possibleWord);
 
             foreach (var possibleWord in possibleWords)
             {
-                Log.InfoFormat("Considering: {0}", possibleWord);
+                CandidateSolution newCs = new CandidateSolution(cs);
 
-                CandidateSolution newCs = cs == null ? new CandidateSolution() : new CandidateSolution(cs);
-                newCs.Add(possibleWord);
+                newCs.AddWord(possibleWord);
+                newCs.RemoveCells(possibleWord);
+                newCs.RemoveWordLength(possibleWord);
 
-                var newgrid = new GridNavigator(grid.GetGridState());
-                newgrid.RemoveCells(possibleWord.Path);
-
-                var newWordLengths = new List<int>(wordLengths);
-                newWordLengths.Remove(possibleWord.Word.Length);
-
-
-                if (newWordLengths.Any())
+                if (newCs.WordLengths.Any())
                 {
-                    var state = newgrid.GetGridState();
-                    Log.InfoFormat("Grid State: {0}", state);
-                    candidateSolutions.AddRange(TrySolve(state, newWordLengths, newCs));
+                    candidateSolutions.AddRange(TrySolve(newCs));
                 }
                 else
                 {
                     candidateSolutions.Add(newCs);
                 }
-
-
             }
-            
+
+            candidateSolutions = candidateSolutions.Distinct().ToList();
+
             if (candidateSolutions.Any())
             {
-                Log.InfoFormat("returning {0}", candidateSolutions.Select(c => c.ToString()).Aggregate((cs1,cs2) => cs1 + Environment.NewLine + cs2));
+                Log.DebugFormat("returning {0}", candidateSolutions.Select(c => c.ToString()).Aggregate((cs1,cs2) => cs1 + Environment.NewLine + cs2));
             }
             return candidateSolutions;
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net.Config;
 using WordbrainHelper;
+using WordbrainHelper.TestData;
+using WordbrainHelper.Tests;
 
 namespace WordbrainConsole
 {
@@ -10,8 +12,31 @@ namespace WordbrainConsole
     {
         static void Main(string[] args)
         {
-            BasicConfigurator.Configure();
+            XmlConfigurator.Configure();
 
+            EnterManual();
+
+            //RunTestCase(WordbrainTestCases.SolveTestCases[1]);
+
+        }
+
+        private static void RunTestCase(SolveTestCase solveTestCase)
+        {
+            var output = WordbrainHelper.WordbrainHelper.Solve(solveTestCase.Input);
+
+            foreach (var candidate in output.Candidates)
+            {
+                if (candidate.FoundWords.Any())
+                {
+                    Console.WriteLine("{0}", candidate.FoundWords.Select(word => word.Word).Aggregate((r1, r2) => r1 + " " + r2));
+                }
+            }
+            Console.WriteLine("done");
+            Console.ReadKey();
+        }
+
+        private static void EnterManual()
+        {
             Console.WriteLine("Enter the grid");
             int? n = null;
             List<string> rows = new List<string>();
@@ -22,7 +47,7 @@ namespace WordbrainConsole
                 {
                     n = line.Length;
                 }
-                
+
                 rows.Add(line);
             }
 
@@ -41,7 +66,6 @@ namespace WordbrainConsole
                 {
                     wordLengths.Add(x);
                 }
-
             }
             Console.WriteLine("Solving");
 
@@ -50,22 +74,17 @@ namespace WordbrainConsole
 
             var input = new WordbrainInput(grid, wordLengths);
 
-            var output = global::WordbrainHelper.WordbrainHelper.Solve(input);
+            var output = WordbrainHelper.WordbrainHelper.Solve(input);
 
             foreach (var candidate in output.Candidates)
             {
-                if (candidate.Any())
+                if (candidate.FoundWords.Any())
                 {
-                    Console.WriteLine("{0}", candidate.Select(word => word.Word).Aggregate((r1, r2) => r1 + " " + r2));
+                    Console.WriteLine("{0}", candidate.FoundWords.Select(word => word.Word).Aggregate((r1, r2) => r1 + " " + r2));
                 }
-
             }
             Console.WriteLine("done");
             Console.ReadKey();
-
         }
-
-
-
     }
 }
